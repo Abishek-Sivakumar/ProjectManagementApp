@@ -1,14 +1,32 @@
 // app/addProjectForm.tsx or screens/AddProjectForm.tsx
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, ScrollView } from 'react-native'
-import { TextInput, Button, Text, Chip } from 'react-native-paper'
+import {
+    Modal,
+    Portal,
+    TextInput,
+    Button,
+    Text,
+    Chip,
+} from 'react-native-paper'
 import { DatePickerModal } from 'react-native-paper-dates'
 import { format } from 'date-fns'
-
-const allMembers = ['Alice', 'Bob', 'Charlie', 'David']
+import {
+    app,
+    db,
+    collection,
+    addDoc,
+    getDocs,
+    query,
+    where,
+    doc,
+    updateDoc,
+} from '../firebaseConfig'
+import { useRouter } from 'expo-router'
 
 export default function AddProjectForm() {
+    const [members, setMembers] = useState([])
     const [projectName, setProjectName] = useState('')
     const [description, setDescription] = useState('')
     const [startDate, setStartDate] = useState<Date | undefined>()
@@ -18,6 +36,22 @@ export default function AddProjectForm() {
     const [openEnd, setOpenEnd] = useState(false)
 
     const [selectedMembers, setSelectedMembers] = useState<string[]>([])
+    const [visible, setVisible] = useState(false)
+    const [modalMessage, setModalMessage] = useState('')
+    const router = useRouter()
+
+    const loadMembers = async () => {
+        const querySnapshot = await getDocs(collection(db, 'users'))
+        querySnapshot.forEach((doc) => {
+            console.log(`${doc.id} => ${doc.data()}`)
+            // @ts-ignore
+            console.log(doc.data().name)
+            setMembers([...members, doc.data().email])
+        })
+    }
+    useEffect(() => {
+        loadMembers()
+    }, [])
 
     const toggleMember = (member: string) => {
         setSelectedMembers((prev) =>
@@ -27,18 +61,47 @@ export default function AddProjectForm() {
         )
     }
 
-    const handleSubmit = () => {
-        console.log({
-            projectName,
-            description,
-            startDate,
-            endDate,
-            selectedMembers,
-        })
+    const handleSubmit = async () => {
+        try {
+            // Create the project document
+            await addDoc(collection(db, 'projects'), {
+                projectName,
+                description,
+                startDate,
+                endDate,
+                assignedTo: selectedMembers,
+            })
+
+            // Update project count for each member
+            for (const email of selectedMembers) {
+                const userQuery = query(
+                    collection(db, 'users'),
+                    where('email', '==', email)
+                )
+                const snapshot = await getDocs(userQuery)
+
+                snapshot.forEach(async (userDoc) => {
+                    const userRef = doc(db, 'users', userDoc.id)
+                    const currentCount = userDoc.data().projectsCount || 0
+
+                    await updateDoc(userRef, {
+                        projectsCount: currentCount + 1,
+                    })
+                })
+            }
+            const success = true
+            setModalMessage('Login successful!')
+            setVisible(true)
+            console.log('Project created and users updated.')
+        } catch (error) {
+            setModalMessage('Login failed due to an error.')
+            setVisible(true)
+            console.error('Error submitting project:', error)
+        }
     }
 
     return (
-        <ScrollView contentContainerStyle={{ padding: 16, marginTop: 40 }}>
+        <ScrollView contentContainerStyle={{ padding: 16, marginTop: 70 }}>
             <Text variant="headlineMedium">Create Project</Text>
 
             <TextInput
@@ -101,7 +164,7 @@ export default function AddProjectForm() {
                 Assign Members
             </Text>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                {allMembers.map((member) => (
+                {members.map((member) => (
                     <Chip
                         key={member}
                         selected={selectedMembers.includes(member)}
@@ -120,6 +183,28 @@ export default function AddProjectForm() {
             >
                 Create Project
             </Button>
+            <Portal>
+                <Modal
+                    visible={visible}
+                    onDismiss={() => setVisible(false)}
+                    contentContainerStyle={{
+                        backgroundColor: 'white',
+                        padding: 20,
+                        margin: 20,
+                        borderRadius: 10,
+                    }}
+                >
+                    <Text>{modalMessage}</Text>
+                    <Button
+                        onPress={() => {
+                            setVisible(false)
+                            router.back() // or router.push('/home') if you want to go to a specific screen
+                        }}
+                    >
+                        OK
+                    </Button>
+                </Modal>
+            </Portal>
         </ScrollView>
     )
 }

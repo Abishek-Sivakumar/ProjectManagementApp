@@ -1,5 +1,14 @@
 import { initializeApp } from 'firebase/app'
-import { getFirestore, collection, addDoc, getDocs } from 'firebase/firestore'
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    getDocs,
+    query,
+    where,
+    doc,
+    updateDoc,
+} from 'firebase/firestore'
 
 const firebaseConfig = {
     apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
@@ -16,4 +25,4 @@ const app = initializeApp(firebaseConfig)
 // Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(app)
 
-export { app, db, collection, addDoc, getDocs }
+export { app, db, collection, addDoc, getDocs, query, where, doc, updateDoc }
