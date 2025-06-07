@@ -45,8 +45,8 @@ export default function AddProjectForm() {
         querySnapshot.forEach((doc) => {
             console.log(`${doc.id} => ${doc.data()}`)
             // @ts-ignore
-            console.log(doc.data().name)
-            setMembers([...members, doc.data().email])
+            console.log(doc.data().email)
+            setMembers((prevMembers) => [...prevMembers, doc.data().email])
         })
     }
     useEffect(() => {

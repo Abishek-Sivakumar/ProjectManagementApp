@@ -31,6 +31,14 @@ export default function RootLayout() {
                         name="[projectid]"
                         options={{ headerShown: false }}
                     />
+                    <Stack.Screen
+                        name="addTask"
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="taskDetails/[taskid]"
+                        options={{ headerShown: false }}
+                    />
                 </Stack>
             </ThemeProvider>
         </PaperProvider>
