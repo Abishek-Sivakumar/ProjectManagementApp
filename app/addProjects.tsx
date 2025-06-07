@@ -90,11 +90,11 @@ export default function AddProjectForm() {
                 })
             }
             const success = true
-            setModalMessage('Login successful!')
+            setModalMessage('Project Added Successfully.')
             setVisible(true)
             console.log('Project created and users updated.')
         } catch (error) {
-            setModalMessage('Login failed due to an error.')
+            setModalMessage('Unable to add project')
             setVisible(true)
             console.error('Error submitting project:', error)
         }

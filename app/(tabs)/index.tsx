@@ -1,12 +1,35 @@
 import { TextInput, View } from 'react-native'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { app, db, collection, addDoc, getDocs } from '../../firebaseConfig'
-import { Text, Button, Card } from 'react-native-paper'
+import { Text, Button, Card, TouchableRipple } from 'react-native-paper'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Link } from 'expo-router'
+import { useFocusEffect } from '@react-navigation/native'
+import { Link, useRouter } from 'expo-router'
 import { Feather } from '@expo/vector-icons'
+import { format } from 'date-fns'
 
 export default function Index() {
+    const router = useRouter()
+    const [projects, setProjects] = useState<any[]>([])
+    const fetchProjects = async () => {
+        try {
+            const querySnapshot = await getDocs(collection(db, 'projects'))
+            const data: any[] = []
+            querySnapshot.forEach((doc) => {
+                data.push({ id: doc.id, ...doc.data() })
+            })
+            setProjects(data)
+        } catch (error) {
+            console.error('Error fetching projects:', error)
+        }
+    }
+    useFocusEffect(
+        useCallback(() => {
+            fetchProjects()
+        }, [])
+    )
+    // @ts-ignore
+    // @ts-ignore
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View className="flex-1 px-5">
@@ -33,14 +56,32 @@ export default function Index() {
                         <Feather name="plus" size={30} color="black" />
                     </Link>
                 </View>
-                <Link href="/profile" asChild>
-                    <Card>
-                        <Card.Content>
-                            <Text variant="titleLarge">Card title</Text>
-                            <Text variant="bodyMedium">Card content</Text>
-                        </Card.Content>
-                    </Card>
-                </Link>
+                {projects.map((project) => (
+                    <TouchableRipple
+                        key={project.id}
+                        onPress={() => router.push(`/${project.id}`)}
+                        rippleColor="rgba(0, 0, 0, .1)"
+                        borderless={false}
+                    >
+                        <Card key={project.id} style={{ marginBottom: 10 }}>
+                            <Card.Content>
+                                <Text variant="titleLarge">
+                                    {project.projectName}
+                                </Text>
+                                <Text variant="bodyMedium">
+                                    {project.description}
+                                </Text>
+                                <Text variant="bodySmall">
+                                    {`Project Due : ${format(project.startDate.toDate(), 'd LLLL yyyy')}`}
+                                </Text>
+                                {/*<Text variant="bodySmall">*/}
+                                {/*    Members:{' '}*/}
+                                {/*    {project.assignedTo?.join(', ') || 'None'}*/}
+                                {/*</Text>*/}
+                            </Card.Content>
+                        </Card>
+                    </TouchableRipple>
+                ))}
             </View>
         </SafeAreaView>
     )

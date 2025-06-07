@@ -27,6 +27,10 @@ export default function RootLayout() {
                         name="addProjects"
                         options={{ headerShown: false }}
                     />
+                    <Stack.Screen
+                        name="[projectid]"
+                        options={{ headerShown: false }}
+                    />
                 </Stack>
             </ThemeProvider>
         </PaperProvider>
