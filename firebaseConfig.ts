@@ -1,13 +1,5 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app'
-import {
-    getAuth,
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    signOut,
-    onAuthStateChanged,
-    GoogleAuthProvider,
-} from 'firebase/auth'
+import { getFirestore, collection, addDoc, getDocs } from 'firebase/firestore'
 
 const firebaseConfig = {
     apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
@@ -20,15 +12,8 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig)
-const auth = getAuth(app)
-const provider = new GoogleAuthProvider()
 
-export {
-    auth,
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    signOut,
-    onAuthStateChanged,
-    GoogleAuthProvider,
-    provider,
-}
+// Initialize Cloud Firestore and get a reference to the service
+const db = getFirestore(app)
+
+export { app, db, collection, addDoc, getDocs }

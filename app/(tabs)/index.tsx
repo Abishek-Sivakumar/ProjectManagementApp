@@ -1,32 +1,20 @@
-import { Text, TextInput, View, Button } from 'react-native'
+import { TextInput, View } from 'react-native'
 import { useState, useEffect } from 'react'
-import { initializeApp } from 'firebase/app'
-import { getFirestore, collection, addDoc, getDocs } from 'firebase/firestore'
+import { app, db, collection, addDoc, getDocs } from '../../firebaseConfig'
+import { Text, Button, Card } from 'react-native-paper'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { Link } from 'expo-router'
+import { Feather } from '@expo/vector-icons'
 
 export default function Index() {
-    const firebaseConfig = {
-        apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
-        authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
-        projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
-        storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
-        messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-        appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
-    }
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig)
-
-    // Initialize Cloud Firestore and get a reference to the service
-    const db = getFirestore(app)
-
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
     const handleSubmit = async () => {
         try {
             const docRef = await addDoc(collection(db, 'users'), {
-                first: 'Abishek',
-                last: 'Sivakumar',
+                first: email,
+                last: password,
                 born: 2004,
             })
             console.log('Document written with ID: ', docRef.id)
@@ -43,21 +31,39 @@ export default function Index() {
     }
 
     return (
-        <View className="flex-1 justify-center items-center px-10">
-            <Text>Sign In</Text>
-            <TextInput
-                className="border-2 border-gray-300"
-                placeholder="Enter email"
-                onChangeText={setEmail}
-                value={email}
-            />
-            <TextInput
-                placeholder="Enter Password"
-                onChangeText={setPassword}
-                value={password}
-            />
-            <Button title="Login" onPress={handleSubmit} />
-            <Button title="Display" onPress={displayUsers} />
-        </View>
+        <SafeAreaView style={{ flex: 1 }}>
+            <View className="flex-1 px-5">
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        backgroundColor: 'tomato',
+                        justifyContent: 'space-between',
+                        padding: 2,
+                        alignItems: 'center',
+                        marginTop: 30,
+                    }}
+                >
+                    <Text
+                        style={{
+                            fontSize: 30,
+                            fontWeight: 'bold',
+                        }}
+                    >
+                        Projects List
+                    </Text>
+                    <Link href="../addProjects" asChild>
+                        <Feather name="plus" size={30} color="black" />
+                    </Link>
+                </View>
+                <Link href="/profile" asChild>
+                    <Card>
+                        <Card.Content>
+                            <Text variant="titleLarge">Card title</Text>
+                            <Text variant="bodyMedium">Card content</Text>
+                        </Card.Content>
+                    </Card>
+                </Link>
+            </View>
+        </SafeAreaView>
     )
 }
