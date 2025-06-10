@@ -222,12 +222,37 @@ export default function ProjectDetail() {
                                         alignItems: 'center',
                                     }}
                                 >
-                                    <Text
-                                        variant="titleMedium"
-                                        style={{ flex: 1 }}
+                                    <View
+                                        style={{
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            flex: 1,
+                                        }}
                                     >
-                                        {task.taskName}
-                                    </Text>
+                                        <Text
+                                            variant="titleMedium"
+                                            style={{ flex: 1 }}
+                                        >
+                                            {task.taskName}
+                                        </Text>
+                                        {task.status === 'done' && (
+                                            <Chip
+                                                mode="outlined"
+                                                style={{
+                                                    marginLeft: 8,
+                                                    backgroundColor: '#C8E6C9',
+                                                    marginRight: 3,
+                                                }}
+                                                textStyle={{
+                                                    color: 'green',
+                                                    fontWeight: 'bold',
+                                                }}
+                                                icon="check"
+                                            >
+                                                Done
+                                            </Chip>
+                                        )}
+                                    </View>
                                     <Chip
                                         style={{
                                             backgroundColor:

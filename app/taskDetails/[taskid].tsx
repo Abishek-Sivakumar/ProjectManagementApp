@@ -5,9 +5,13 @@ import { Text, Card, Chip, useTheme, Divider, Button } from 'react-native-paper'
 import {
     doc,
     getDoc,
+    getDocs,
     deleteDoc,
     updateDoc,
     increment,
+    query,
+    where,
+    collection,
 } from 'firebase/firestore'
 import { db } from '../../firebaseConfig'
 import { format } from 'date-fns'
@@ -44,20 +48,36 @@ export default function TaskDetail() {
             return
         }
 
-        const userRef = doc(db, 'users', task.assignedTo)
-
         try {
-            await updateDoc(userRef, {
+            // Step 1: Find user by email to get their UID
+            const usersRef = collection(db, 'users')
+            const q = query(usersRef, where('email', '==', task.assignedTo))
+            const querySnapshot = await getDocs(q)
+
+            if (querySnapshot.empty) {
+                throw new Error('User with this email not found.')
+            }
+
+            const userDoc = querySnapshot.docs[0]
+            const userId = userDoc.id
+
+            // Step 2: Update user stats
+            await updateDoc(doc(db, 'users', userId), {
                 tasksCompleted: increment(1),
                 tasksDue: increment(-1),
                 tasksPending: increment(-1),
             })
 
-            Alert.alert('Success', 'Task marked as done and stats updated.')
+            // Step 3: Update the task status
+            await updateDoc(doc(db, 'tasks', task.id), {
+                status: 'done',
+            })
+
+            Alert.alert('Success', 'Task marked as done.')
             router.back()
         } catch (error) {
-            console.error('Error updating user stats:', error)
-            Alert.alert('Error', 'Failed to update user statistics.')
+            console.error('Error marking task as done:', error)
+            Alert.alert('Error', 'Failed to mark task as done.')
         }
     }
 

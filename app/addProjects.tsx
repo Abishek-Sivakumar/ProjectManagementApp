@@ -46,6 +46,7 @@ export default function AddProjectForm() {
             console.log(`${doc.id} => ${doc.data()}`)
             // @ts-ignore
             console.log(doc.data().email)
+            // @ts-ignore
             setMembers((prevMembers) => [...prevMembers, doc.data().email])
         })
     }
