@@ -43,6 +43,13 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "823e6e41-9330-444e-ba96-f57104b888d2"
+      }
+    },
+    "owner": "abishek_sivakumar"
   }
 }
