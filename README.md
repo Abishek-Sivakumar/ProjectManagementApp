@@ -55,5 +55,15 @@ Inittialize your own keys by using a .env file
    npx expo start
 ```
 
+## Modules Completed 
+Project Management Module\
+Task Management Module\
+Dashboard & Analytics Module
+
+## Modules Pending
+Authentication Module
+
+PS: I have alternatively implemented a custom login page using Firestore
+
 
 
