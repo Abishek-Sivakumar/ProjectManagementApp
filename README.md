@@ -1,6 +1,6 @@
 # 📋 Project Management App
 
-This is an [Expo](https://expo.dev) app built with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app). The app helps users manage projects and tasks efficiently with features like Firebase authentication, project tracking, task analytics (via pie charts), and user dashboards.
+This is an [Expo](https://expo.dev) app built with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app). The app helps users manage projects and tasks efficiently with features like authentication, project tracking, task analytics (via pie charts), and user dashboards.
 
 ---
 
