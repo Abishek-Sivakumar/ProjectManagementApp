@@ -1,4 +1,4 @@
-import { Stack } from 'expo-router'
+import { Slot, Stack, useRouter } from 'expo-router'
 import './globals.css'
 import { useColorScheme } from 'react-native'
 import {
@@ -8,6 +8,7 @@ import {
     ThemeProvider,
 } from 'react-native-paper'
 import { Colors } from '@/constants/Color'
+import { AuthProvider, useAuth } from '../authContext'
 
 export default function RootLayout() {
     const colorScheme = useColorScheme()
@@ -15,32 +16,33 @@ export default function RootLayout() {
         colorScheme === 'dark'
             ? { ...MD3DarkTheme, colors: Colors.dark }
             : { ...MD3LightTheme, colors: Colors.light }
+
     return (
         <PaperProvider>
             <ThemeProvider>
-                <Stack>
-                    <Stack.Screen
-                        name="(tabs)"
-                        options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                        name="addProjects"
-                        options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                        name="[projectid]"
-                        options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                        name="addTask"
-                        options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                        name="taskDetails/[taskid]"
-                        options={{ headerShown: false }}
-                    />
-                </Stack>
+                <AuthProvider>
+                    <LayoutController />
+                </AuthProvider>
             </ThemeProvider>
         </PaperProvider>
+    )
+}
+
+function LayoutController() {
+    const { user } = useAuth()
+
+    // 👇 Show login (`/index`) if user not logged in
+    return (
+        <Stack screenOptions={{ headerShown: false }}>
+            {!user ? (
+                <Stack.Screen name="index" />
+            ) : (
+                <Stack.Screen name="(tabs)" />
+            )}
+            <Stack.Screen name="addProjects" />
+            <Stack.Screen name="[projectid]" />
+            <Stack.Screen name="addTask" />
+            <Stack.Screen name="taskDetails/[taskid]" />
+        </Stack>
     )
 }
