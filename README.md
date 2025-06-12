@@ -1,50 +1,59 @@
-# Welcome to your Expo app 👋
+# 📋 Project Management App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This is an [Expo](https://expo.dev) app built with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app). The app helps users manage projects and tasks efficiently with features like Firebase authentication, project tracking, task analytics (via pie charts), and user dashboards.
 
-## Get started
+---
 
-1. Install dependencies
+## 🚀 Features
 
-    ```bash
-    npm install
-    ```
+- 📂 Create, View, and Delete Projects
+- ✅ Add and Track Tasks (with status and priority)
+- 📊 Visual Task Summary with Pie Chart
+- ☁️ Firestore integration for real-time data
+- 🧠 Dynamic Dashboard based on user login
+- 🔁 Automatic refresh on tab focus
 
-2. Start the app
+---
 
-    ```bash
-    npx expo start
-    ```
+## 🧑‍💻 Tech Stack
 
-In the output, you'll find options to open the app in a
+- **React Native (Expo)**
+- **Firebase (Firestore)**
+- **React Native Paper** for UI components
+- **React Navigation & Expo Router**
+- **react-native-chart-kit** for charts
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+---
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## ⚙️ Get Started
 
-## Get a fresh project
-
-When you're ready, run:
+### 1. Clone the repository
 
 ```bash
-npm run reset-project
+git clone https://github.com/yourusername/project-management-app.git
+cd project-management-app
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 2.Install dependencies 
+```aiignore
+   npx expo install
+```
 
-## Learn more
+### 3.Change config for Firebase
+```aiignore
+    apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
+    authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
+```
+Inittialize your own keys by using a .env file
 
-To learn more about developing your project with Expo, look at the following resources:
+### 3.Run the app on Expo Go using
+```aiignore
+   npx expo start
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
 
-## Join the community
 
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
